@@ -11,6 +11,7 @@ interface HistorySidebarProps {
   history: HistoryItem[];
   onClear: () => void;
   onRecall: (item: HistoryItem) => void;
+  onDeleteItem: (id: string) => void;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -19,6 +20,7 @@ export default function HistorySidebar({
   history,
   onClear,
   onRecall,
+  onDeleteItem,
   isOpen,
   onClose,
 }: HistorySidebarProps) {
@@ -92,14 +94,22 @@ export default function HistorySidebar({
                       </span>
                     </div>
 
-                    <div className="mt-2 pt-2 border-t border-white/5 flex justify-end">
+                    <div className="mt-2 pt-2 border-t border-white/5 flex justify-between items-center gap-4">
+                      <button
+                        id={`delete-item-btn-${item.id}`}
+                        onClick={() => onDeleteItem(item.id)}
+                        className="flex items-center gap-1.5 text-[11px] font-medium text-red-400/90 hover:text-red-300 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Delete
+                      </button>
                       <button
                         id={`recall-item-btn-${item.id}`}
                         onClick={() => onRecall(item)}
-                        className="flex items-center gap-1 text-[11px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
+                        className="flex items-center gap-1.5 text-[11px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
-                        Recall Result
+                        Recall
                       </button>
                     </div>
                   </motion.div>
@@ -113,10 +123,10 @@ export default function HistorySidebar({
                 <button
                   id="clear-all-history-btn"
                   onClick={onClear}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/5 hover:bg-indigo-950/20 hover:border-indigo-900/30 border border-white/5 text-neutral-350 text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/5 hover:bg-red-950/40 hover:border-red-900/40 border border-white/5 text-red-400 hover:text-red-300 text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
-                  Clear All History
+                  Delete All History
                 </button>
               </div>
             )}

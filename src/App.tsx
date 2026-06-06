@@ -7,17 +7,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { 
   History as HistoryIcon, 
-  Volume2, 
-  VolumeX, 
   Delete, 
-  HelpCircle, 
-  Info,
-  ChevronRight,
   Sparkles
 } from 'lucide-react';
 
 import { HistoryItem } from './types';
-import { playClickSound } from './utils/audio';
 import HistorySidebar from './components/HistorySidebar';
 
 export default function App() {
@@ -33,16 +27,14 @@ export default function App() {
   const [memory, setMemory] = useState<number>(0);
   
   // System parameters
-  const [soundOn, setSoundOn] = useState<boolean>(true);
   const [historyOpen, setHistoryOpen] = useState<boolean>(false);
-  const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [activePressedKey, setActivePressedKey] = useState<string | null>(null);
 
   // References
   const displayRef = useRef<HTMLDivElement>(null);
 
-  // Load history & initial sound preference from LocalStorage
+  // Load history from LocalStorage
   useEffect(() => {
     const savedHistory = localStorage.getItem('calc_history_v1');
     if (savedHistory) {
@@ -52,11 +44,6 @@ export default function App() {
         console.error('Failed to parse calc history:', e);
       }
     }
-
-    const savedSound = localStorage.getItem('calc_sound_pref');
-    if (savedSound !== null) {
-      setSoundOn(savedSound === 'true');
-    }
   }, []);
 
   // Save history to localstorage on update
@@ -65,12 +52,8 @@ export default function App() {
     localStorage.setItem('calc_history_v1', JSON.stringify(newHistory));
   };
 
-  // Sound play gate
-  const triggerClick = () => {
-    if (soundOn) {
-      playClickSound(0.4);
-    }
-  };
+  // Sound play gate (disabled per user instruction "click feedback venda")
+  const triggerClick = () => {};
 
   // Format dynamic display digits safely (add comma grouping for integers)
   const formatDisplayString = (val: string): string => {
@@ -347,15 +330,9 @@ export default function App() {
     triggerClick();
   };
 
-  const toggleSound = () => {
-    const nextPref = !soundOn;
-    setSoundOn(nextPref);
-    localStorage.setItem('calc_sound_pref', nextPref.toString());
-    
-    // Play single confirming click if being turned on
-    if (nextPref) {
-      playClickSound(0.5);
-    }
+  const handleDeleteHistoryItem = (id: string) => {
+    const nextHistory = history.filter(item => item.id !== id);
+    updateHistory(nextHistory);
   };
 
   // Handle Keyboard synchronization map
@@ -411,7 +388,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [display, prevValue, op, isNextNumberPending, isFinished, soundOn, memory]);
+  }, [display, prevValue, op, isNextNumberPending, isFinished, memory]);
 
   // Clean all history records
   const handleClearHistory = () => {
@@ -439,30 +416,13 @@ export default function App() {
         <div className="flex gap-4 sm:gap-6 text-sm text-white/50">
           <span 
             onClick={() => setHistoryOpen(true)}
-            className="hover:text-white cursor-pointer transition-colors relative flex items-center gap-1"
+            className="hover:text-white cursor-pointer transition-colors relative flex items-center gap-1 font-medium text-indigo-400"
           >
             History
             {history.length > 0 && (
               <span className="absolute -top-1 -right-1.5 w-1.5 h-1.5 bg-indigo-500 rounded-full" />
             )}
           </span>
-          <span 
-            onClick={() => setHelpOpen(!helpOpen)}
-            className={`hover:text-white cursor-pointer transition-colors ${helpOpen ? 'text-indigo-400 font-semibold' : ''}`}
-          >
-            Guide
-          </span>
-          <button 
-            type="button"
-            onClick={toggleSound}
-            className="hover:text-white cursor-pointer transition-colors text-xs flex items-center gap-1 bg-transparent border-0"
-          >
-            {soundOn ? (
-              <span className="text-indigo-400 font-semibold flex items-center gap-1 font-sans">Click Feedback <Volume2 className="w-3.5 h-3.5" /></span>
-            ) : (
-              <span className="flex items-center gap-1 font-sans">Muted <VolumeX className="w-3.5 h-3.5" /></span>
-            )}
-          </button>
         </div>
       </nav>
 
@@ -493,43 +453,6 @@ export default function App() {
               {formatDisplayString(display)}
             </div>
           </div>
-
-          {/* Quick Help Collapsible Segment styled to match sleek look */}
-          {helpOpen && (
-            <motion.div
-              id="help-drawer"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="bg-black/30 rounded-2xl border border-white/5 p-4 text-xs text-neutral-400 flex flex-col gap-2.5 shadow-inner"
-            >
-              <div className="flex items-center gap-1.5 text-indigo-400 font-medium font-display">
-                <Info className="w-4 h-4" />
-                <span>Keyboard Operations Map</span>
-              </div>
-              <p className="leading-relaxed text-neutral-400 text-[11px]">
-                Type directly inside the application workspace to execute computations. Key binds include:
-              </p>
-              <div className="grid grid-cols-2 gap-2 font-mono text-[10px] mt-1 text-neutral-300">
-                <div className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-neutral-250 font-sans">0</kbd>-<kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-neutral-250 font-sans">9</kbd>
-                  <span>: Numbers</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-indigo-300">+</kbd> <kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-indigo-300">-</kbd> <kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-indigo-300">*</kbd> <kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-indigo-300">/</kbd>
-                  <span>: Operations</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-neutral-250 font-sans">↵ Enter</kbd>
-                  <span>: Resolve</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-neutral-800 border border-white/5 rounded text-neutral-250 font-sans">Esc</kbd>
-                  <span>: Clear (AC)</span>
-                </div>
-              </div>
-            </motion.div>
-          )}
 
           {/* Calculator Scientific Memory Grid (MC, MR, M+, M-) */}
           <div id="calculator-mem-row" className="grid grid-cols-4 gap-4 -mb-2">
@@ -845,17 +768,17 @@ export default function App() {
           </div>
         </div>
 
-        {/* Slide-out History Menu */}
-        <HistorySidebar
-          history={history}
-          onClear={handleClearHistory}
-          onRecall={handleRecallHistory}
-          isOpen={historyOpen}
-          onClose={() => setHistoryOpen(false)}
-        />
-
-
       </div>
+
+      {/* Slide-out History Menu - Placed at root level to prevent clipping and secure pointer events */}
+      <HistorySidebar
+        history={history}
+        onClear={handleClearHistory}
+        onRecall={handleRecallHistory}
+        onDeleteItem={handleDeleteHistoryItem}
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+      />
     </div>
   );
 }
