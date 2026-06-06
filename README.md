@@ -1,11 +1,48 @@
-<div align="center">
+# Simple Calculator 2026
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A beautiful, dark-themed, and highly responsive single-screen calculator featuring audio click feedback, fully persistent historic records, and a custom scientific memory bank (MC, MR, M+, M-). 
 
-  <h1>Built with AI Studio</h2>
+Built under supreme design standards to deliver an effortless browser-based computation workflow.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+---
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## 🎨 Design & Aesthetic Choices
 
-</div>
+*   **Dark Modern Canvas**: Built on an ambient anthracite/charcoal backdrop ([#0A0A0B]) featuring dynamic mesh glowing radial blur segments in the background.
+*   **Vibrant Interactive Indicators**: Integrated soft purple and indigo accents for operations and active buttons, giving direct user action focus.
+*   **Sleek Layout**: Standard layout centering a tactile button panel with generous negative spacing and subtle drop shadows.
+*   **OLED LCD Simulator Screen**: Displays live running mathematical formulas above high-contrast, dynamically scaling numbers.
+
+---
+
+## ✨ Features
+
+*   **Audio Click Feedback**: Optional, responsive real-time audio click sounds for button presses that can be muted directly in the navigation bar.
+*   **Persistent calculation history drawer**: Side overlay log tracking all recent formulas and outcomes, with a "Recall Result" functionality.
+*   **Flexible Scientific Memory**: Full support for standard memory registers (`MC`, `MR`, `M+`, `M-`) displaying status markers when active.
+*   **Comprehensive Operations Map**: Full keyboard support. Type digits or operations on your physical keyboard to execute calculations instantly.
+
+---
+
+## ⌨️ Keyboard Operations Map
+
+To calculate at physical speeds, use the direct physical binding keys inside the workspace:
+
+| Key Binding | Functionality |
+| :--- | :--- |
+| **`0` - `9`** | Real-time Digit Inputs |
+| **`+` , `-` , `*` , `/`** | Standard Operations |
+| **`.`** | Floating point decimal insertion |
+| **`Backspace`** | Erasure of last input digit |
+| **`Enter` or `=`** | Evaluate formula equation |
+| **`Esc` or `Delete`** | All Clear (AC) resets computation registers |
+
+---
+
+## 🛠️ Technology Stack
+
+*   **React 18 & TypeScript**: Ensures bulletproof runtime typing and modern component composition.
+*   **Vite**: Extremely lighting-fast dev and release bundling.
+*   **Tailwind CSS**: Modern utility styling providing custom responsive breakpoints and layout density.
+*   **Motion**: Rich high-performance element transitions.
+*   **Lucide React**: Clean vector-drawn glyphs for status panels.
