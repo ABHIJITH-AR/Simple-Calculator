@@ -23,9 +23,6 @@ export default function App() {
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [formula, setFormula] = useState<string>('');
   
-  // Memory registers
-  const [memory, setMemory] = useState<number>(0);
-  
   // System parameters
   const [historyOpen, setHistoryOpen] = useState<boolean>(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
@@ -291,34 +288,6 @@ export default function App() {
     }
   };
 
-  // Memory utilities
-  const memoryAdd = () => {
-    triggerClick();
-    const num = parseFloat(display);
-    if (!isNaN(num)) {
-      setMemory(prev => prev + num);
-    }
-  };
-
-  const memorySubtract = () => {
-    triggerClick();
-    const num = parseFloat(display);
-    if (!isNaN(num)) {
-      setMemory(prev => prev - num);
-    }
-  };
-
-  const memoryRecall = () => {
-    triggerClick();
-    setDisplay(formatNumberPruning(memory));
-    setIsFinished(true);
-  };
-
-  const memoryClear = () => {
-    triggerClick();
-    setMemory(0);
-  };
-
   const handleRecallHistory = (item: HistoryItem) => {
     // Set display value to targeted history evaluation result
     setDisplay(item.result);
@@ -388,7 +357,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [display, prevValue, op, isNextNumberPending, isFinished, memory]);
+  }, [display, prevValue, op, isNextNumberPending, isFinished]);
 
   // Clean all history records
   const handleClearHistory = () => {
@@ -454,46 +423,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Calculator Scientific Memory Grid (MC, MR, M+, M-) */}
-          <div id="calculator-mem-row" className="grid grid-cols-4 gap-4 -mb-2">
-            <button
-              id="mem-clear-btn"
-              type="button"
-              onClick={memoryClear}
-              className="h-10 rounded-2xl bg-white/5 text-indigo-300/80 hover:text-indigo-250 border border-white/5 text-xs font-semibold tracking-wider cursor-pointer hover:bg-white/10 transition-all active:scale-[0.96]"
-            >
-              MC
-            </button>
-            <button
-              id="mem-recall-btn"
-              type="button"
-              onClick={memoryRecall}
-              className={`h-10 rounded-2xl border text-xs font-semibold tracking-wider cursor-pointer transition-all active:scale-[0.96] ${
-                memory !== 0 
-                  ? 'bg-indigo-950/20 text-indigo-400 border-indigo-900/60 hover:bg-indigo-900/30' 
-                  : 'bg-white/5 text-indigo-300/80 hover:text-indigo-250 border border-white/5 hover:bg-white/10'
-              }`}
-            >
-              MR
-            </button>
-            <button
-              id="mem-add-btn"
-              type="button"
-              onClick={memoryAdd}
-              className="h-10 rounded-2xl bg-white/5 text-indigo-300/80 hover:text-indigo-250 border border-white/5 text-xs font-semibold tracking-wider cursor-pointer hover:bg-white/10 transition-all active:scale-[0.96]"
-            >
-              M+
-            </button>
-            <button
-              id="mem-subtract-btn"
-              type="button"
-              onClick={memorySubtract}
-              className="h-10 rounded-2xl bg-white/5 text-indigo-300/80 hover:text-indigo-250 border border-white/5 text-xs font-semibold tracking-wider cursor-pointer hover:bg-white/10 transition-all active:scale-[0.96]"
-            >
-              M-
-            </button>
-          </div>
-
           {/* Calculator Keypad Grid */}
           <div id="calculator-key-grid" className="grid grid-cols-4 gap-4 bg-transparent select-none">
             {/* ROW 1: AC/C, Backspace, %, Division */}
@@ -502,7 +431,7 @@ export default function App() {
                 id="btn-clear"
                 type="button"
                 onClick={clearAll}
-                className={`h-16 rounded-2xl text-xl font-medium flex items-center justify-center hover:bg-white/10 cursor-pointer border transition-all active:scale-[0.96] ${
+                className={`w-full aspect-square rounded-full text-xl font-medium flex items-center justify-center hover:bg-white/10 cursor-pointer border transition-all active:scale-[0.96] ${
                   activePressedKey === 'btn-clear'
                     ? 'bg-white/20 border-white/15 scale-95 text-indigo-200' 
                     : 'bg-white/5 text-indigo-300 border-white/5'
@@ -515,7 +444,7 @@ export default function App() {
                 id="btn-clear-buffer"
                 type="button"
                 onClick={clearCurrent}
-                className="h-16 rounded-2xl bg-white/5 text-indigo-300 hover:text-indigo-200 hover:bg-white/10 border border-white/5 text-xl font-medium flex items-center justify-center cursor-pointer transition-all active:scale-[0.96]"
+                className="w-full aspect-square rounded-full bg-white/5 text-indigo-300 hover:text-indigo-200 hover:bg-white/10 border border-white/5 text-xl font-medium flex items-center justify-center cursor-pointer transition-all active:scale-[0.96]"
               >
                 C
               </button>
@@ -525,7 +454,7 @@ export default function App() {
               id="btn-backspace"
               type="button"
               onClick={backspaceEnd}
-              className={`h-16 rounded-2xl text-xl font-medium cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-xl font-medium cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-backspace'
                   ? 'bg-white/20 border-white/15 scale-95 text-indigo-200'
                   : 'bg-white/5 text-indigo-300 border-white/5 hover:bg-white/10'
@@ -539,7 +468,7 @@ export default function App() {
               id="btn-percent"
               type="button"
               onClick={percentage}
-              className={`h-16 rounded-2xl text-xl font-medium cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-xl font-medium cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-percent'
                   ? 'bg-white/20 border-white/15 scale-95 text-indigo-200'
                   : 'bg-white/5 text-indigo-300 border-white/5 hover:bg-white/10'
@@ -552,7 +481,7 @@ export default function App() {
               id="btn-divide"
               type="button"
               onClick={() => handleOperator('/')}
-              className={`h-16 rounded-2xl text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 op === '/' 
                   ? 'bg-indigo-700 text-white border-indigo-400 font-bold scale-95 shadow-inner shadow-indigo-900/40' 
                   : activePressedKey === 'btn-divide'
@@ -568,7 +497,7 @@ export default function App() {
               id="btn-7"
               type="button"
               onClick={() => inputDigit('7')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-7'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -580,7 +509,7 @@ export default function App() {
               id="btn-8"
               type="button"
               onClick={() => inputDigit('8')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-8'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -592,7 +521,7 @@ export default function App() {
               id="btn-9"
               type="button"
               onClick={() => inputDigit('9')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-9'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -604,7 +533,7 @@ export default function App() {
               id="btn-multiply"
               type="button"
               onClick={() => handleOperator('*')}
-              className={`h-16 rounded-2xl text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 op === '*' 
                   ? 'bg-indigo-700 text-white border-indigo-400 font-bold scale-95 shadow-inner' 
                   : activePressedKey === 'btn-multiply'
@@ -620,7 +549,7 @@ export default function App() {
               id="btn-4"
               type="button"
               onClick={() => inputDigit('4')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-4'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -632,7 +561,7 @@ export default function App() {
               id="btn-5"
               type="button"
               onClick={() => inputDigit('5')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-5'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -644,7 +573,7 @@ export default function App() {
               id="btn-6"
               type="button"
               onClick={() => inputDigit('6')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-6'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -656,7 +585,7 @@ export default function App() {
               id="btn-subtract"
               type="button"
               onClick={() => handleOperator('-')}
-              className={`h-16 rounded-2xl text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 op === '-' 
                   ? 'bg-indigo-700 text-white border-indigo-400 font-bold scale-95 shadow-inner' 
                   : activePressedKey === 'btn-subtract'
@@ -672,7 +601,7 @@ export default function App() {
               id="btn-1"
               type="button"
               onClick={() => inputDigit('1')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-1'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -684,7 +613,7 @@ export default function App() {
               id="btn-2"
               type="button"
               onClick={() => inputDigit('2')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-2'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -696,7 +625,7 @@ export default function App() {
               id="btn-3"
               type="button"
               onClick={() => inputDigit('3')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-3'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -708,7 +637,7 @@ export default function App() {
               id="btn-add"
               type="button"
               onClick={() => handleOperator('+')}
-              className={`h-16 rounded-2xl text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-3xl font-light cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 op === '+' 
                   ? 'bg-indigo-700 text-white border-indigo-400 font-bold scale-95 shadow-inner' 
                   : activePressedKey === 'btn-add'
@@ -724,7 +653,7 @@ export default function App() {
               id="btn-sign"
               type="button"
               onClick={toggleSign}
-              className="h-16 rounded-2xl bg-white/10 text-white border border-white/5 hover:bg-white/20 text-2xl font-normal flex items-center justify-center cursor-pointer transition-all active:scale-[0.96]"
+              className="w-full aspect-square rounded-full bg-white/10 text-white border border-white/5 hover:bg-white/20 text-2xl font-normal flex items-center justify-center cursor-pointer transition-all active:scale-[0.96]"
             >
               ±
             </button>
@@ -732,7 +661,7 @@ export default function App() {
               id="btn-0"
               type="button"
               onClick={() => inputDigit('0')}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-0'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -744,7 +673,7 @@ export default function App() {
               id="btn-decimal"
               type="button"
               onClick={inputDecimal}
-              className={`h-16 rounded-2xl text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
+              className={`w-full aspect-square rounded-full text-2xl font-normal text-white cursor-pointer border transition-all active:scale-[0.96] flex items-center justify-center ${
                 activePressedKey === 'btn-decimal'
                   ? 'bg-white/25 border-white/15 scale-95'
                   : 'bg-white/10 border-white/5 hover:bg-white/20'
@@ -756,7 +685,7 @@ export default function App() {
               id="btn-equals"
               type="button"
               onClick={evaluate}
-              className={`h-16 rounded-2xl text-3xl font-light cursor-pointer transition-all active:scale-[0.96] flex items-center justify-center shadow-lg shadow-purple-900/40 ${
+              className={`w-full aspect-square rounded-full text-3xl font-light cursor-pointer transition-all active:scale-[0.96] flex items-center justify-center shadow-lg shadow-purple-900/40 ${
                 activePressedKey === 'btn-equals'
                   ? 'from-indigo-600 to-purple-700 scale-95 text-white'
                   : 'bg-gradient-to-tr from-indigo-500 to-purple-600 text-white hover:brightness-110'

@@ -1,6 +1,6 @@
 # Simple Calculator 2026
 
-A beautiful, dark-themed, and highly responsive single-screen calculator featuring audio click feedback, fully persistent historic records, and a custom scientific memory bank (MC, MR, M+, M-). 
+A beautiful, dark-themed, and highly responsive single-screen calculator featuring fully persistent historic records, individual history item deletion, and clear-all features.
 
 Built under supreme design standards to deliver an effortless browser-based computation workflow.
 
@@ -17,9 +17,8 @@ Built under supreme design standards to deliver an effortless browser-based comp
 
 ## ✨ Features
 
-*   **Audio Click Feedback**: Optional, responsive real-time audio click sounds for button presses that can be muted directly in the navigation bar.
-*   **Persistent calculation history drawer**: Side overlay log tracking all recent formulas and outcomes, with a "Recall Result" functionality.
-*   **Flexible Scientific Memory**: Full support for standard memory registers (`MC`, `MR`, `M+`, `M-`) displaying status markers when active.
+*   **Persistent calculation history drawer**: Side overlay log tracking all recent formulas and outcomes, with a "Recall" functionality.
+*   **Individual & Bulk History Removal**: Supports deletion of specific calculation items or entire logs with a simple click.
 *   **Comprehensive Operations Map**: Full keyboard support. Type digits or operations on your physical keyboard to execute calculations instantly.
 
 ---
