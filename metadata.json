@@ -1,6 +1,0 @@
-{
-  "name": "Simple Calculator",
-  "description": "A beautiful, modern, and responsive simple calculator with an elegant minimalist design, smooth transition animations, and calculation history.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
